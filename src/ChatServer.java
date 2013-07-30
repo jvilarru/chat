@@ -1,9 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-package chatserver;
-
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
