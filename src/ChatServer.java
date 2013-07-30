@@ -23,7 +23,7 @@ public class ChatServer {
 
     public ChatServer() throws IOException {
         server = new ServerSocket(port);
-        clients = new ArrayList<>();
+        clients = new ArrayList<Socket>();
     }
 
     public static void main(String[] args) {
