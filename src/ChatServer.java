@@ -16,14 +16,20 @@ public class ChatServer {
     /**
      * @param args the command line arguments
      */
-    private ServerSocket server;
-    private List<Socket> clients;
-    private static final int port = 2000;
+    private ServerSocket serverText;
+    private ServerSocket serverSound;
+    private List<ClientText> clients;
+    private List<SoundClient> clientsVeu;
+    private static final int portText = 2000;
+    private static final int portSound = 2001;
     private boolean run = true;
 
     public ChatServer() throws IOException {
-        server = new ServerSocket(port);
-        clients = new ArrayList<Socket>();
+        serverText = new ServerSocket(portText);
+        serverSound = new ServerSocket(portSound);
+
+        clients = new ArrayList<ClientText>();
+        clientsVeu = new ArrayList<SoundClient>();
     }
 
     public static void main(String[] args) {
@@ -36,11 +42,14 @@ public class ChatServer {
 
     private void start() throws IOException {
         Calendar c = Calendar.getInstance();
-        Socket s;
+        Socket socketText,socketSound;
         while (run) {
-            s = server.accept();
-            new Thread(new Writer(s, clients)).start();
-            System.out.println("["+c.get(Calendar.HOUR)+":"+c.get(Calendar.MINUTE)+":"+c.get(Calendar.SECOND)+"] Client with IP " + s.getInetAddress().getHostAddress() + ":" + s.getPort() + " added.");
+            socketText = serverText.accept();
+            socketSound = serverSound.accept();
+            SoundClient sc = new SoundClient(socketSound, clientsVeu);
+            sc.start();
+            new ClientText(socketText, sc, clients).start();
+            System.out.println("["+c.get(Calendar.HOUR)+":"+c.get(Calendar.MINUTE)+":"+c.get(Calendar.SECOND)+"] Client with IP " + socketText.getInetAddress().getHostAddress() + ":" + socketText.getPort() + " added.");
         }
     }
 }
